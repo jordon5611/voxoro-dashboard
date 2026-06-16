@@ -129,32 +129,26 @@ export default function CampaignsPage() {
     endDate: string;
     endTime: string;
     callsPerHour: number;
-    leads: { number: string; name?: string }[];
+    leads: { number: string; name?: string; business?: string }[];
   }) => {
     setCreating(true);
     try {
       const startDateTime = new Date(`${data.startDate}T${data.startTime}`);
       const endDateTime = new Date(`${data.endDate}T${data.endTime}`);
 
-      const customers = data.leads.map((lead, index) => {
-        const staggerMinutes = (index / data.callsPerHour) * 60;
-        const leadEarliestAt = new Date(
-          startDateTime.getTime() + staggerMinutes * 60 * 1000
-        );
+      const customers = data.leads.map((lead) => {
+        const variableValues: Record<string, string> = {};
+        if (lead.name) variableValues.lead_name = lead.name;
+        if (lead.business) variableValues.business_name = lead.business;
 
         return {
           number: lead.number,
           name: lead.name,
           numberE164CheckEnabled: true as const,
-          assistantOverrides: lead.name
-            ? {
-                variableValues: { lead_name: lead.name },
-              }
-            : undefined,
-          schedulePlan: {
-            earliestAt: leadEarliestAt.toISOString(),
-            latestAt: endDateTime.toISOString(),
-          },
+          assistantOverrides:
+            Object.keys(variableValues).length > 0
+              ? { variableValues }
+              : undefined,
         };
       });
 

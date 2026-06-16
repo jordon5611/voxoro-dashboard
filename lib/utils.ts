@@ -59,7 +59,7 @@ export function formatDateTime(dateStr?: string): string {
   return `${formatDate(dateStr)} ${formatTime(dateStr)}`;
 }
 
-export function parseLeadsText(text: string): { number: string; name?: string }[] {
+export function parseLeadsText(text: string): { number: string; name?: string; business?: string }[] {
   const lines = text
     .split("\n")
     .map((l) => l.trim())
@@ -70,14 +70,15 @@ export function parseLeadsText(text: string): { number: string; name?: string }[
       const parts = line.split(",").map((p) => p.trim());
       const number = parts[0];
       const name = parts[1] || undefined;
+      const business = parts[2] || undefined;
       if (!number || !validateE164(number)) return null;
-      return { number: formatE164(number), name };
+      return { number: formatE164(number), name, business };
     })
-    .filter(Boolean) as { number: string; name?: string }[];
+    .filter(Boolean) as { number: string; name?: string; business?: string }[];
 }
 
 export function parseCsv(file: File): Promise<{
-  leads: { number: string; name?: string }[];
+  leads: { number: string; name?: string; business?: string }[];
   errors: string[];
 }> {
   return new Promise((resolve) => {
@@ -85,13 +86,14 @@ export function parseCsv(file: File): Promise<{
     reader.onload = (e) => {
       const text = e.target?.result as string;
       const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-      const leads: { number: string; name?: string }[] = [];
+      const leads: { number: string; name?: string; business?: string }[] = [];
       const errors: string[] = [];
 
       lines.forEach((line, index) => {
         const parts = line.split(",").map((p) => p.trim().replace(/^"|"$/g, ""));
         const number = parts[0];
         const name = parts[1] || undefined;
+        const business = parts[2] || undefined;
 
         if (!number) {
           errors.push(`Row ${index + 1}: Missing phone number`);
@@ -103,7 +105,7 @@ export function parseCsv(file: File): Promise<{
           return;
         }
 
-        leads.push({ number: formatE164(number), name });
+        leads.push({ number: formatE164(number), name, business });
       });
 
       resolve({ leads, errors });

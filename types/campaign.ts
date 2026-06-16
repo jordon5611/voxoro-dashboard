@@ -5,10 +5,6 @@ export interface Customer {
   assistantOverrides?: {
     variableValues?: Record<string, string>;
   };
-  schedulePlan?: {
-    earliestAt: string;
-    latestAt: string;
-  };
 }
 
 export interface SchedulePlan {
