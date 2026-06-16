@@ -61,7 +61,8 @@ async function vapiRequest<T>(
 
 // Campaigns
 export async function listCampaigns(): Promise<Campaign[]> {
-  return vapiRequest<Campaign[]>("GET", "/campaign");
+  const response = await vapiRequest<{ results: Campaign[] }>("GET", "/campaign");
+  return response.results ?? response;
 }
 
 export async function getCampaign(id: string): Promise<Campaign> {
