@@ -15,6 +15,7 @@ import {
   updateCampaign,
   deleteCampaign,
 } from "@/lib/vapi";
+import { DEFAULT_ASSISTANT_ID, DEFAULT_PHONE_NUMBER_ID } from "@/lib/constants";
 import { Campaign, CampaignCallCounts } from "@/types/campaign";
 import { Call } from "@/types/call";
 import {
@@ -123,8 +124,6 @@ export default function CampaignsPage() {
 
   const handleCreateCampaign = async (data: {
     name: string;
-    assistantId: string;
-    phoneNumberId: string;
     startDate: string;
     startTime: string;
     endDate: string;
@@ -161,8 +160,8 @@ export default function CampaignsPage() {
 
       await createCampaign({
         name: data.name,
-        assistantId: data.assistantId,
-        phoneNumberId: data.phoneNumberId,
+        assistantId: DEFAULT_ASSISTANT_ID,
+        phoneNumberId: DEFAULT_PHONE_NUMBER_ID,
         customers,
         schedulePlan: {
           earliestAt: startDateTime.toISOString(),

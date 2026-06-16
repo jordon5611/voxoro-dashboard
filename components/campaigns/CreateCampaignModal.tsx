@@ -22,8 +22,6 @@ interface CreateCampaignModalProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: {
     name: string;
-    assistantId: string;
-    phoneNumberId: string;
     startDate: string;
     startTime: string;
     endDate: string;
@@ -41,8 +39,6 @@ export function CreateCampaignModal({
   loading,
 }: CreateCampaignModalProps) {
   const [name, setName] = useState("");
-  const [assistantId, setAssistantId] = useState("");
-  const [phoneNumberId, setPhoneNumberId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("09:00");
   const [endDate, setEndDate] = useState("");
@@ -56,8 +52,6 @@ export function CreateCampaignModal({
 
   const resetForm = () => {
     setName("");
-    setAssistantId("");
-    setPhoneNumberId("");
     setStartDate("");
     setStartTime("09:00");
     setEndDate("");
@@ -101,8 +95,6 @@ export function CreateCampaignModal({
     const newErrors: string[] = [];
 
     if (!name.trim()) newErrors.push("Campaign name is required");
-    if (!assistantId.trim()) newErrors.push("Assistant ID is required");
-    if (!phoneNumberId.trim()) newErrors.push("Phone Number ID is required");
     if (!startDate) newErrors.push("Start date is required");
     if (!endDate) newErrors.push("End date is required");
     if (callsPerHour < 1) newErrors.push("Calls per hour must be at least 1");
@@ -119,8 +111,6 @@ export function CreateCampaignModal({
     setErrors([]);
     onSubmit({
       name: name.trim(),
-      assistantId: assistantId.trim(),
-      phoneNumberId: phoneNumberId.trim(),
       startDate,
       startTime,
       endDate,
@@ -165,28 +155,6 @@ export function CreateCampaignModal({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Q4 Sales Outreach"
-                className="mt-1.5"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="assistantId">Assistant ID</Label>
-              <Input
-                id="assistantId"
-                value={assistantId}
-                onChange={(e) => setAssistantId(e.target.value)}
-                placeholder="VAPI assistant ID"
-                className="mt-1.5"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="phoneNumberId">Phone Number ID</Label>
-              <Input
-                id="phoneNumberId"
-                value={phoneNumberId}
-                onChange={(e) => setPhoneNumberId(e.target.value)}
-                placeholder="VAPI phone number ID"
                 className="mt-1.5"
               />
             </div>
