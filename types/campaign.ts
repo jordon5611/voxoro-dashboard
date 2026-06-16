@@ -19,7 +19,7 @@ export interface Campaign {
   phoneNumberId: string;
   customers: Customer[];
   schedulePlan?: SchedulePlan;
-  status?: "queued" | "running" | "paused" | "completed";
+  status?: "scheduled" | "queued" | "running" | "paused" | "completed" | "ended";
   createdAt?: string;
   updatedAt?: string;
 }

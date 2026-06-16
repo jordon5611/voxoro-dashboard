@@ -27,6 +27,8 @@ interface CampaignTableProps {
 
 function getStatusBadge(status?: string) {
   switch (status) {
+    case "scheduled":
+      return <Badge variant="outline">Scheduled</Badge>;
     case "running":
       return <Badge variant="success">Running</Badge>;
     case "paused":
@@ -35,6 +37,8 @@ function getStatusBadge(status?: string) {
       return <Badge variant="secondary">Completed</Badge>;
     case "queued":
       return <Badge variant="outline">Queued</Badge>;
+    case "ended":
+      return <Badge variant="secondary">Ended</Badge>;
     default:
       return <Badge variant="outline">Unknown</Badge>;
   }
