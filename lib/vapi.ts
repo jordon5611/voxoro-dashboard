@@ -92,8 +92,11 @@ export async function listCalls(
   limit = 100
 ): Promise<Call[]> {
   const params: Record<string, string | number> = { limit };
-  if (campaignId) params.campaignId = campaignId;
-  return vapiRequest<Call[]>("GET", "/call", { params });
+  const calls = await vapiRequest<Call[]>("GET", "/call", { params });
+  if (campaignId) {
+    return calls.filter((call) => call.campaignId === campaignId);
+  }
+  return calls;
 }
 
 export async function getCall(id: string): Promise<Call> {
