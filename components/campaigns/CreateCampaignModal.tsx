@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Upload, AlertCircle } from "lucide-react";
+import { Upload, AlertCircle, Download } from "lucide-react";
 import { parseLeadsText, parseCsv } from "@/lib/utils";
 
 interface CreateCampaignModalProps {
@@ -228,7 +228,7 @@ export function CreateCampaignModal({
               <Label htmlFor="leads">
                 Leads ({leadCount} valid)
               </Label>
-              <div>
+              <div className="flex items-center gap-2">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -236,6 +236,23 @@ export function CreateCampaignModal({
                   onChange={handleCsvImport}
                   className="hidden"
                 />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const csv = "phone,name,business\n+447742868942,Zaid,Pizza Palace\n+441234567890,Jane Smith,Smith & Co Law Firm\n+923001234567,Ali Khan,Tech Solutions";
+                    const blob = new Blob([csv], { type: "text/csv" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "leads-template.csv";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                >
+                  <Download className="mr-1.5 h-3.5 w-3.5" />
+                  Template
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
