@@ -59,7 +59,7 @@ export function formatDateTime(dateStr?: string): string {
   return `${formatDate(dateStr)} ${formatTime(dateStr)}`;
 }
 
-export function parseLeadsText(text: string): { number: string; name?: string; business?: string }[] {
+export function parseLeadsText(text: string): { number: string; name?: string; business?: string; businessType?: string }[] {
   const lines = text
     .split("\n")
     .map((l) => l.trim())
@@ -71,14 +71,15 @@ export function parseLeadsText(text: string): { number: string; name?: string; b
       const number = parts[0];
       const name = parts[1] || undefined;
       const business = parts[2] || undefined;
+      const businessType = parts[3] || undefined;
       if (!number || !validateE164(number)) return null;
-      return { number: formatE164(number), name, business };
+      return { number: formatE164(number), name, business, businessType };
     })
-    .filter(Boolean) as { number: string; name?: string; business?: string }[];
+    .filter(Boolean) as { number: string; name?: string; business?: string; businessType?: string }[];
 }
 
 export function parseCsv(file: File): Promise<{
-  leads: { number: string; name?: string; business?: string }[];
+  leads: { number: string; name?: string; business?: string; businessType?: string }[];
   errors: string[];
 }> {
   return new Promise((resolve) => {
@@ -86,7 +87,7 @@ export function parseCsv(file: File): Promise<{
     reader.onload = (e) => {
       const text = e.target?.result as string;
       const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-      const leads: { number: string; name?: string; business?: string }[] = [];
+      const leads: { number: string; name?: string; business?: string; businessType?: string }[] = [];
       const errors: string[] = [];
 
       lines.forEach((line, index) => {
@@ -94,6 +95,7 @@ export function parseCsv(file: File): Promise<{
         const number = parts[0];
         const name = parts[1] || undefined;
         const business = parts[2] || undefined;
+        const businessType = parts[3] || undefined;
 
         if (!number) {
           errors.push(`Row ${index + 1}: Missing phone number`);
@@ -105,7 +107,7 @@ export function parseCsv(file: File): Promise<{
           return;
         }
 
-        leads.push({ number: formatE164(number), name, business });
+        leads.push({ number: formatE164(number), name, business, businessType });
       });
 
       resolve({ leads, errors });

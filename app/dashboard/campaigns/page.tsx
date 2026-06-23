@@ -129,7 +129,7 @@ export default function CampaignsPage() {
     endDate: string;
     endTime: string;
     callsPerHour: number;
-    leads: { number: string; name?: string; business?: string }[];
+    leads: { number: string; name?: string; business?: string; businessType?: string }[];
   }) => {
     setCreating(true);
     try {
@@ -140,6 +140,7 @@ export default function CampaignsPage() {
         const variableValues: Record<string, string> = {};
         if (lead.name) variableValues.lead_name = lead.name;
         if (lead.business) variableValues.business_name = lead.business;
+        if (lead.businessType) variableValues.business_type = lead.businessType;
 
         return {
           number: lead.number,

@@ -27,7 +27,7 @@ interface CreateCampaignModalProps {
     endDate: string;
     endTime: string;
     callsPerHour: number;
-    leads: { number: string; name?: string; business?: string }[];
+    leads: { number: string; name?: string; business?: string; businessType?: string }[];
   }) => void;
   loading?: boolean;
 }
@@ -79,9 +79,18 @@ export function CreateCampaignModal({
       .map((l) => {
         const parts = [l.number];
         if (l.name) parts.push(l.name);
-        if (l.business) {
+        if (l.business || l.businessType) {
           if (!l.name) parts.push("");
-          parts.push(l.business);
+          parts.push(l.business || "");
+        }
+        if (l.businessType) {
+          if (!l.business && !l.name) {
+            parts.push("");
+            parts.push("");
+          } else if (!l.business) {
+            parts.push("");
+          }
+          parts.push(l.businessType);
         }
         return parts.join(",");
       })
@@ -240,7 +249,7 @@ export function CreateCampaignModal({
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    const csv = "phone,name,business\n+447742868942,Zaid,Pizza Palace\n+441234567890,Jane Smith,Smith & Co Law Firm\n+923001234567,Ali Khan,Tech Solutions";
+                    const csv = "phone,name,business,business_type\n+447742868942,Zaid,Pizza Palace,restaurant\n+441234567890,Jane Smith,Smith & Co Law Firm,law firm\n+923001234567,Ali Khan,Tech Solutions,IT company";
                     const blob = new Blob([csv], { type: "text/csv" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
@@ -267,11 +276,11 @@ export function CreateCampaignModal({
               id="leads"
               value={leadsText}
               onChange={(e) => handleLeadsChange(e.target.value)}
-              placeholder="+1234567890,John Doe,Acme Inc&#10;+1987654321,Jane Smith,Smith Co"
+              placeholder="+1234567890,John Doe,Acme Inc,law firm&#10;+1987654321,Jane Smith,Smith Co,dental practice"
               className="mt-1.5 min-h-[120px] font-mono text-sm"
             />
             <p className="mt-1 text-xs text-muted-foreground">
-              One lead per line. Format: +phone,name,business (name &amp; business optional). E.164 format required.
+              One lead per line. Format: +phone,name,business,type (all except phone optional). E.164 format required.
             </p>
             {csvErrors.length > 0 && (
               <div className="mt-2 rounded-md border border-warning/50 bg-warning/10 p-2">
